@@ -1,20 +1,14 @@
-import pandas_datareader as pdr
-from datetime import datetime
+from sqlalchemy import select,insert
 import mysql.connector
-import yfinance as yf
-import pandas as pd
-import FinanceDataReader as fdr
 import pymysql
 from sqlalchemy import create_engine,text
-import pandas as pd
-import sqlalchemy
-from sqlalchemy import select
-
 
 import os.path
 import json
 
 from fastapi import FastAPI
+
+from stock import result as R
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.relpath("./")))
 secret_file = os.path.join(BASE_DIR, '../secret.json')
@@ -35,17 +29,22 @@ USERNAME=get_secret("Mysql_Username")
 PASSWORD=get_secret("Mysql_Password")
 DBNAME=get_secret("Mysql_DBname")
 
-
-df_spx = fdr.StockListing('Kosdaq')
-df = df_spx[["Code", "Name", "MarketId", "Dept", "Close"]]
-df.loc[:, "Date"] = datetime.now().strftime("%Y-%m-%d")
-
-# Create the SQLAlchemy engine object
 engine = create_engine(f'mysql+pymysql://{USERNAME}:{PASSWORD}@{HOSTNAME}:{PORT}/{DBNAME}')
-result = df.to_sql("stock", engine, if_exists='append', index=False)
 
-#여기까지 db 넣기 python 실행하면 넣어짐.
+#api
+app=FastAPI()
 
+def Selectfs():
+    with engine.connect() as conn:
+        result = conn.execute(text("select * from stock"))
+        resultDict = []
+        for row in result:
+            resultDict.append({"Code" : row.Code, "Name":row.Name, "MarketId" : row.MarketId, "Dept" : row.Dept, "Close": row.Close})
+        print(resultDict)
+    return resultDict
 
+@app.get('/selectall')
+async def selectall():
+    result = Selectfs()
+    return result
 
-    
