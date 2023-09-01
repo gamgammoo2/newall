@@ -23,13 +23,12 @@ def get_secret(setting, secrets=secrets):
         errorMsg = "Set the {} environment variable.".format(setting)
         return errorMsg
 
-HOSTNAME=get_secret("Mysql_Hostname")
-PORT=get_secret("Mysql_Port")
+HOSTNAME=get_secret("rds_endpoint")
 USERNAME=get_secret("Mysql_Username")
-PASSWORD=get_secret("Mysql_Password")
+PASSWORD=get_secret("rds_password")
 DBNAME=get_secret("Mysql_DBname")
 
-engine = create_engine(f'mysql+pymysql://{USERNAME}:{PASSWORD}@{HOSTNAME}:{PORT}/{DBNAME}')
+engine = create_engine(f'mysql+pymysql://{USERNAME}:{PASSWORD}@{HOSTNAME}/{DBNAME}')
 
 #api
 app=FastAPI()
@@ -47,4 +46,5 @@ def Selectfs():
 async def selectall():
     result = Selectfs()
     return result
+
 

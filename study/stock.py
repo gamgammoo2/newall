@@ -29,10 +29,9 @@ def get_secret(setting, secrets=secrets):
         errorMsg = "Set the {} environment variable.".format(setting)
         return errorMsg
 
-HOSTNAME=get_secret("Mysql_Hostname")
-PORT=get_secret("Mysql_Port")
+HOSTNAME=get_secret("rds_endpoint")
 USERNAME=get_secret("Mysql_Username")
-PASSWORD=get_secret("Mysql_Password")
+PASSWORD=get_secret("rds_password")
 DBNAME=get_secret("Mysql_DBname")
 
 
@@ -41,7 +40,7 @@ df = df_spx[["Code", "Name", "MarketId", "Dept", "Close"]]
 df.loc[:, "Date"] = datetime.now().strftime("%Y-%m-%d")
 
 # Create the SQLAlchemy engine object
-engine = create_engine(f'mysql+pymysql://{USERNAME}:{PASSWORD}@{HOSTNAME}:{PORT}/{DBNAME}')
+engine = create_engine(f'mysql+pymysql://{USERNAME}:{PASSWORD}@{HOSTNAME}/{DBNAME}')
 result = df.to_sql("stock", engine, if_exists='append', index=False)
 
 #여기까지 db 넣기 python 실행하면 넣어짐.
