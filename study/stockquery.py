@@ -3,6 +3,8 @@ import mysql.connector
 import pymysql
 from sqlalchemy import create_engine,text
 
+from stock
+
 import os.path
 import json
 
@@ -42,6 +44,7 @@ def Selectfs():
         print(resultDict)
     return resultDict
 
+# fastapi로 전부다 select
 @app.get('/selectall')
 async def selectall():
     result = Selectfs()
