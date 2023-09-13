@@ -17,8 +17,6 @@ import json
 import schedule
 import time
 
-from fastapi import FastAPI
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.relpath("./")))
 secret_file = os.path.join(BASE_DIR, '../secret.json')
 
@@ -42,19 +40,21 @@ DBNAME=get_secret("Mysql_DBname")
 
 def inserting(): 
     df_spx = fdr.StockListing('Kosdaq')
-    df = df_spx[["Code", "Name", "MarketId", "Dept", "Close"]]
+    df = df_spx[[ "Code","Name", "MarketId", "Dept", "Close"]]
     df.loc[:, "Date"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     # Create the SQLAlchemy engine object
     engine = create_engine(f'mysql+pymysql://{USERNAME}:{PASSWORD}@{HOSTNAME}/{DBNAME}')
-    df.to_sql("stock", engine, if_exists='append', index=False)
+
+   
+    df.to_sql("stock", engine,if_exists='append' ,index=False)
     print('good')
 
 # #여기까지 db 넣기 python 실행하면 넣어짐.
 
 #하루에 한번씩 실행
 # schedule.every(10).seconds.do(inserting)
-schedule.every(1).hours.do(inserting)
+schedule.every(1).day.do(inserting)
 
 # step4.스캐쥴 시작 -> 매크로 처럼 돌리기
 while True:
