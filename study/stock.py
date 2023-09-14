@@ -50,13 +50,14 @@ def inserting():
     df.to_sql("stock", engine,if_exists='append' ,index=False)
     print('good')
 
+inserting()
 # #여기까지 db 넣기 python 실행하면 넣어짐.
 
 #하루에 한번씩 실행
 # schedule.every(10).seconds.do(inserting)
 schedule.every(1).day.do(inserting)
 
-# step4.스캐쥴 시작 -> 매크로 처럼 돌리기
+# # step4.스캐쥴 시작 -> 매크로 처럼 돌리기
 while True:
     schedule.run_pending()
     time.sleep(1)
