@@ -50,14 +50,12 @@ async def selectall():
     result = Selectfs()
     return result
 
-# 커서 생성
-cursor = engine.cursor()
 
 #일부 select - Name
 @app.get('/selectname')
 async def selectname(name:str):
     with engine.connect() as conn:
-        result = conn.execute(text("select * from stock where Name=?",[name]))
+        result = conn.execute(text("select * from stock where Name='" + name + "'"))
         resultDict = []
         for row in result:
             resultDict.append({"Code" : row.Code, "Name":row.Name, "MarketId" : row.MarketId, "Dept" : row.Dept, "Close": row.Close})
