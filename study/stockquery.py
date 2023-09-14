@@ -58,7 +58,7 @@ async def selectname(name:str):
         result = conn.execute(text("select * from stock where Name='" + name + "'"))
         resultDict = []
         for row in result:
-            resultDict.append({"Code" : row.Code, "Name":row.Name, "MarketId" : row.MarketId, "Dept" : row.Dept, "Close": row.Close})
+            resultDict.append({"Code" : row.Code, "Name":row.Name, "MarketId" : row.MarketId, "Dept" : row.Dept, "Close": row.Close,"Date":row.Date})
         print(resultDict)
     return resultDict
 
